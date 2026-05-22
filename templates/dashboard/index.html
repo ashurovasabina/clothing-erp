@@ -13,43 +13,24 @@
         width: 100%;
         margin-bottom: 20px;
     }
-    .stats-box {
-        background-color: #f8f9fa;
-        border-radius: 4px;
-        padding: 15px;
-        margin-bottom: 15px;
-        box-shadow: 0 1px 3px rgba(0,0,0,.1);
-    }
-    .stats-title {
-        font-weight: 600;
-        margin-bottom: 10px;
-    }
-    .stats-number {
-        font-size: 24px;
-        font-weight: bold;
-    }
-    .stats-amount {
-        font-size: 18px;
-        color: #666;
-    }
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 15px;
-    }
     .card {
         margin-bottom: 20px;
-        border-radius: 4px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
         overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        background: #ffffff;
     }
     .card-header {
-        background-color: #f8f9fa;
-        padding: 15px;
-        border-bottom: 1px solid #e9ecef;
+        background-color: #f8fafc;
+        padding: 18px 20px;
+        border-bottom: 1px solid #edf2f7;
     }
     .card-header h5 {
         margin: 0;
+        font-weight: 700;
+        color: #1e293b;
+        font-size: 16px;
     }
     .card-body {
         padding: 20px;
@@ -59,27 +40,277 @@
     }
     .tab-buttons {
         display: flex;
-        border-bottom: 1px solid #dee2e6;
-        margin-bottom: 15px;
+        border-bottom: 2px solid #e2e8f0;
+        margin-bottom: 20px;
     }
     .tab-button {
-        padding: 10px 15px;
+        padding: 10px 20px;
         cursor: pointer;
-        border: 1px solid transparent;
-        border-bottom: none;
-        margin-bottom: -1px;
+        border: none;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
         background-color: transparent;
+        font-weight: 600;
+        color: #64748b;
+        transition: all 0.2s ease;
+    }
+    .tab-button:hover {
+        color: #3b82f6;
     }
     .tab-button.active {
-        border-color: #dee2e6;
-        border-bottom-color: white;
-        background-color: white;
+        border-bottom: 2px solid #3b82f6;
+        color: #3b82f6;
+        background-color: transparent;
     }
     .tab-content {
         display: none;
     }
     .tab-content.active {
         display: block;
+    }
+
+    /* CI/CD Premium Banner Styling */
+    .cicd-banner {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 18px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #f1f5f9;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        margin-bottom: 25px;
+        position: relative;
+        overflow: hidden;
+        animation: slideInDown 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cicd-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+        animation: shine 4s infinite linear;
+    }
+    @keyframes shine {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+    @keyframes slideInDown {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    .cicd-pulse {
+        width: 12px;
+        height: 12px;
+        background-color: #10b981;
+        border-radius: 50%;
+        margin-right: 15px;
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+        animation: pulseGreen 1.8s infinite;
+        flex-shrink: 0;
+    }
+    @keyframes pulseGreen {
+        0% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+        }
+        70% {
+            transform: scale(1);
+            box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+        }
+        100% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+        }
+    }
+    .cicd-text {
+        flex-grow: 1;
+        font-size: 15px;
+        letter-spacing: 0.3px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .cicd-badge {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 9999px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+    .cicd-title {
+        color: #67e8f9;
+    }
+    .cicd-meta {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-size: 13px;
+        color: #94a3b8;
+        border-left: 1px solid rgba(255, 255, 255, 0.15);
+        padding-left: 15px;
+    }
+    .cicd-time {
+        font-family: monospace;
+    }
+    .cicd-status-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #3b82f6;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    /* Premium Stats Cards Upgrade */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+    .stats-box {
+        position: relative;
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 22px;
+        margin-bottom: 0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eef2f6;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        overflow: hidden;
+    }
+    .stats-box:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+        border-color: rgba(0, 0, 0, 0.05);
+    }
+    .stats-box::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 120px;
+        height: 120px;
+        background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+        border-radius: 50%;
+        transform: translate(30px, -30px);
+        pointer-events: none;
+    }
+    .stats-icon-wrapper {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: #fff;
+        flex-shrink: 0;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    .stats-content {
+        flex-grow: 1;
+    }
+    .stats-title {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 700;
+        color: #64748b;
+        margin-bottom: 6px;
+    }
+    .stats-number {
+        font-size: 28px;
+        font-weight: 800;
+        color: #1e293b;
+        line-height: 1;
+        margin-bottom: 4px;
+    }
+    .stats-number span {
+        font-size: 13px;
+        font-weight: 500;
+        color: #94a3b8;
+        margin-left: 5px;
+    }
+    .stats-amount {
+        font-size: 16px;
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    /* Gradients and custom styles per status */
+    .stats-card-draft {
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    }
+    .stats-card-draft .stats-icon-wrapper {
+        background: linear-gradient(135deg, #94a3b8, #64748b);
+        box-shadow: 0 6px 15px rgba(100, 116, 139, 0.3);
+    }
+
+    .stats-card-confirmed {
+        background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+    }
+    .stats-card-confirmed .stats-icon-wrapper {
+        background: linear-gradient(135deg, #4ade80, #22c55e);
+        box-shadow: 0 6px 15px rgba(34, 197, 94, 0.3);
+    }
+
+    .stats-card-processing {
+        background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+    }
+    .stats-card-processing .stats-icon-wrapper {
+        background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .stats-card-ready {
+        background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+    }
+    .stats-card-ready .stats-icon-wrapper {
+        background: linear-gradient(135deg, #c084fc, #a855f7);
+        box-shadow: 0 6px 15px rgba(168, 85, 247, 0.3);
+    }
+
+    .stats-card-shipped {
+        background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
+    }
+    .stats-card-shipped .stats-icon-wrapper {
+        background: linear-gradient(135deg, #fbbf24, #d97706);
+        box-shadow: 0 6px 15px rgba(217, 119, 6, 0.3);
+    }
+
+    .stats-card-delivered {
+        background: linear-gradient(135deg, #ffffff 0%, #ecfdf5 100%);
+    }
+    .stats-card-delivered .stats-icon-wrapper {
+        background: linear-gradient(135deg, #34d399, #059669);
+        box-shadow: 0 6px 15px rgba(5, 150, 105, 0.3);
+    }
+
+    .stats-card-cancelled {
+        background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+    }
+    .stats-card-cancelled .stats-icon-wrapper {
+        background: linear-gradient(135deg, #f87171, #ef4444);
+        box-shadow: 0 6px 15px rgba(239, 68, 68, 0.3);
+    }
+
+    .stats-card-returned {
+        background: linear-gradient(135deg, #ffffff 0%, #fff7ed 100%);
+    }
+    .stats-card-returned .stats-icon-wrapper {
+        background: linear-gradient(135deg, #fb923c, #ea580c);
+        box-shadow: 0 6px 15px rgba(234, 88, 12, 0.3);
     }
 </style>
 {% endblock %}
@@ -94,6 +325,25 @@
 {% block content %}
 
 <div class="container-fluid">
+    <!-- CI/CD Deployment Info Banner -->
+    <div class="row">
+        <div class="col-12">
+            <div class="cicd-banner">
+                <div style="display: flex; align-items: center; flex-grow: 1;">
+                    <div class="cicd-pulse"></div>
+                    <div class="cicd-text">
+                        <span class="cicd-badge"><i class="fas fa-rocket"></i> CI/CD faol</span>
+                        <strong class="cicd-title">Tizim yangilandi:</strong> Loyiha muvaffaqiyatli tarzda GitHub Actions orqali avtomatik tarzda deployment qilindi!
+                    </div>
+                </div>
+                <div class="cicd-meta">
+                    <span class="cicd-time"><i class="fas fa-clock"></i> Yangilangan vaqt: {% now "H:i:s" %}</span>
+                    <span class="cicd-status-dot"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-6">
             <div class="card">
@@ -184,14 +434,42 @@
                 <div class="card-body">
                     <div class="stats-grid">
                         {% for status in orders_by_status %}
-                        <div class="stats-box">
-                            <div class="stats-title">{{ status.get_status_display }}</div>
-                            <div class="stats-number">{{ status.count }}</div>
-                            <div class="stats-amount">{{ status.total_amount|floatformat:0 }} {% trans "so'm" %}</div>
+                        <div class="stats-box stats-card-{{ status.status }}">
+                            <div class="stats-icon-wrapper">
+                                {% if status.status == 'draft' %}
+                                <i class="fas fa-edit"></i>
+                                {% elif status.status == 'confirmed' %}
+                                <i class="fas fa-check-circle"></i>
+                                {% elif status.status == 'processing' %}
+                                <i class="fas fa-cog fa-spin"></i>
+                                {% elif status.status == 'ready' %}
+                                <i class="fas fa-box"></i>
+                                {% elif status.status == 'shipped' %}
+                                <i class="fas fa-truck"></i>
+                                {% elif status.status == 'delivered' %}
+                                <i class="fas fa-handshake"></i>
+                                {% elif status.status == 'cancelled' %}
+                                <i class="fas fa-times-circle"></i>
+                                {% elif status.status == 'returned' %}
+                                <i class="fas fa-undo"></i>
+                                {% else %}
+                                <i class="fas fa-shopping-bag"></i>
+                                {% endif %}
+                            </div>
+                            <div class="stats-content">
+                                <div class="stats-title">{{ status.get_status_display }}</div>
+                                <div class="stats-number">{{ status.count }}<span>{% trans "ta buyurtma" %}</span></div>
+                                <div class="stats-amount">{{ status.total_amount|floatformat:0 }} {% trans "so'm" %}</div>
+                            </div>
                         </div>
                         {% empty %}
                         <div class="stats-box">
-                            <div class="stats-title">{% trans "Ma'lumotlar yo'q" %}</div>
+                            <div class="stats-icon-wrapper" style="background: #cbd5e1;">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="stats-content">
+                                <div class="stats-title">{% trans "Ma'lumotlar yo'q" %}</div>
+                            </div>
                         </div>
                         {% endfor %}
                     </div>
