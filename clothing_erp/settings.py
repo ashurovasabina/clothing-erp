@@ -171,7 +171,7 @@ JAZZMIN_SETTINGS = {
         {"name": _("Dashboard"), "url": "admin:index", "permissions": ["auth.view_user"]},
 
         # External url that opens in a new window (Permissions can be added)
-        {"name": _("Support"), "url": "https://github.com/SobirjonAbdumajid", "new_window": True},
+        {"name": _("Support"), "url": "https://github.com/ashurovasabina", "new_window": True},
 
         # App with dropdown menu to all its models pages
         {"app": "inventory"},
