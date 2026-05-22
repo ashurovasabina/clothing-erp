@@ -39,4 +39,4 @@ jobs:
 
             # 5. Gunicorn-ni qayta yuklaymiz 
             # (Agarda tizimda xizmat nomi boshqacha bo'lsa, 'gunicorn' o'rniga o'shani yozing)
-            sudo systemctl restart gunicorn
+            sudo systemctl restart clothing_erp
