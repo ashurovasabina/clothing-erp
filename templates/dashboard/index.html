@@ -1,0 +1,439 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrahead %}
+{{ block.super }}
+<script src="{% static 'js/charts/chart.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+<style>
+    .chart-container {
+        position: relative;
+        height: 300px;
+        height: 300px;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .stats-box {
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    }
+    .stats-title {
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    .stats-number {
+        font-size: 24px;
+        font-weight: bold;
+    }
+    .stats-amount {
+        font-size: 18px;
+        color: #666;
+    }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+    }
+    .card {
+        margin-bottom: 20px;
+        border-radius: 4px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    .card-header {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-bottom: 1px solid #e9ecef;
+    }
+    .card-header h5 {
+        margin: 0;
+    }
+    .card-body {
+        padding: 20px;
+    }
+    .tab-panel {
+        margin-top: 20px;
+    }
+    .tab-buttons {
+        display: flex;
+        border-bottom: 1px solid #dee2e6;
+        margin-bottom: 15px;
+    }
+    .tab-button {
+        padding: 10px 15px;
+        cursor: pointer;
+        border: 1px solid transparent;
+        border-bottom: none;
+        margin-bottom: -1px;
+        background-color: transparent;
+    }
+    .tab-button.active {
+        border-color: #dee2e6;
+        border-bottom-color: white;
+        background-color: white;
+    }
+    .tab-content {
+        display: none;
+    }
+    .tab-content.active {
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+  &rsaquo; {% trans 'Boshqaruv paneli' %}
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>{% trans "So'nggi 30 kunlik sotuvlar" %}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>{% trans "Kategoriyalar bo'yicha sotuvlar" %}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Graphs Section -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>{% trans "Qo'shimcha Statistikalar" %}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="tab-panel">
+                        <div class="tab-buttons">
+                            <button class="tab-button active" data-tab="monthly-sales">{% trans "Oylik Sotuvlar" %}</button>
+                            <button class="tab-button" data-tab="inventory-status">{% trans "Inventarizatsiya Holati" %}</button>
+                            <button class="tab-button" data-tab="top-products">{% trans "Top Mahsulotlar" %}</button>
+                        </div>
+
+                        <!-- Monthly Sales Tab -->
+                        <div class="tab-content active" id="monthly-sales">
+                            <div class="chart-container">
+                                <canvas id="monthlySalesChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Inventory Status Tab -->
+                        <div class="tab-content" id="inventory-status">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="chart-container">
+                                        <canvas id="inventoryPieChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="chart-container">
+                                        <canvas id="lowStockChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top Products Tab -->
+                        <div class="tab-content" id="top-products">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="chart-container">
+                                        <canvas id="topProductsChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>{% trans "Buyurtmalar statistikasi" %}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="stats-grid">
+                        {% for status in orders_by_status %}
+                        <div class="stats-box">
+                            <div class="stats-title">{{ status.get_status_display }}</div>
+                            <div class="stats-number">{{ status.count }}</div>
+                            <div class="stats-amount">{{ status.total_amount|floatformat:0 }} {% trans "so'm" %}</div>
+                        </div>
+                        {% empty %}
+                        <div class="stats-box">
+                            <div class="stats-title">{% trans "Ma'lumotlar yo'q" %}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Tab functionality
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Deactivate all tabs
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Activate the clicked tab
+            button.classList.add('active');
+            document.getElementById(button.dataset.tab).classList.add('active');
+        });
+    });
+
+    // Sales chart data
+    fetch('{% url "dashboard:sales_chart_data" %}')
+        .then(response => response.json())
+        .then(data => {
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            new Chart(salesCtx, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString() + " so'm";
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' +
+                                        context.raw.toLocaleString() + " so'm";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error loading sales chart data:', error);
+            document.getElementById('salesChart').parentNode.innerHTML =
+                '<div class="alert alert-danger">Chart ma\'lumotlarini yuklashda xatolik.</div>';
+        });
+
+    // Category chart data
+    fetch('{% url "dashboard:category_distribution" %}?type=sales')
+        .then(response => response.json())
+        .then(data => {
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            new Chart(categoryCtx, {
+                type: 'pie',
+                data: data.data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return context.label + ': ' +
+                                        value.toLocaleString() + " so'm (" + percentage + "%)";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error loading category chart data:', error);
+            document.getElementById('categoryChart').parentNode.innerHTML =
+                '<div class="alert alert-danger">Chart ma\'lumotlarini yuklashda xatolik.</div>';
+        });
+
+    // Monthly Sales Chart
+    fetch('{% url "dashboard:monthly_sales_data" %}')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('monthlySalesChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Sotuvlar (so\'m)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString() + " so'm";
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Oylar'
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error loading monthly sales data:', error);
+            document.getElementById('monthlySalesChart').parentNode.innerHTML =
+                '<div class="alert alert-danger">Oylik sotuvlar ma\'lumotlarini yuklashda xatolik.</div>';
+        });
+
+    // Inventory Status Pie Chart
+    fetch('{% url "dashboard:inventory_status_data" %}')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('inventoryPieChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: data.pieData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Inventarizatsiya Holati'
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Low Stock Chart
+            const lowStockCtx = document.getElementById('lowStockChart').getContext('2d');
+            new Chart(lowStockCtx, {
+                type: 'bar',
+                data: data.lowStockData,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Kam Qolgan Mahsulotlar'
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Qolgan miqdor'
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error loading inventory status data:', error);
+        });
+
+    // Top Products Chart
+    fetch('{% url "dashboard:top_products_data" %}')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('topProductsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Eng Ko\'p Sotiladigan Mahsulotlar'
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Sotuvlar miqdori'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString() + " dona";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error loading top products data:', error);
+            document.getElementById('topProductsChart').parentNode.innerHTML =
+                '<div class="alert alert-danger">Top mahsulotlar ma\'lumotlarini yuklashda xatolik.</div>';
+        });
+});
+</script>
+{% endblock %}

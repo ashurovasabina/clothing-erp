@@ -1,0 +1,71 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ title }} | {% trans 'Kiyim-Kechak ERP Admin' %}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}">
+        {% trans 'Kiyim-Kechak ERP Admin' %}
+    </a>
+</h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    :root {
+        --primary: #007bff;
+        --secondary: #6c757d;
+        --success: #28a745;
+        --info: #17a2b8;
+        --warning: #ffc107;
+        --danger: #dc3545;
+        --light: #f8f9fa;
+        --dark: #343a40;
+    }
+    
+    #header {
+        background: var(--primary);
+        color: #fff;
+    }
+    
+    #branding h1, #branding h1 a:link, #branding h1 a:visited {
+        color: #fff;
+    }
+    
+    div.breadcrumbs {
+        background: var(--secondary);
+    }
+    
+    .module h2, .module caption, .inline-group h2 {
+        background: var(--primary);
+    }
+    
+    .button, input[type=submit], input[type=button], .submit-row input, a.button {
+        background: var(--primary);
+    }
+    
+    .button:hover, input[type=submit]:hover, input[type=button]:hover {
+        background: #0069d9;
+    }
+    
+    .button.default, input[type=submit].default, .submit-row input.default {
+        background: var(--success);
+    }
+    
+    .button.default:hover, input[type=submit].default:hover {
+        background: #218838;
+    }
+    
+    .delete-button {
+        background: var(--danger);
+    }
+    
+    .delete-button:hover {
+        background: #c82333;
+    }
+</style>
+{% endblock %}
