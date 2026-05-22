@@ -39,3 +39,9 @@ class DashboardApiTests(TestCase):
         url = reverse('dashboard:top_products_data')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+    def test_health_check(self):
+        url = reverse('health_check')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'status': 'healthy'})
