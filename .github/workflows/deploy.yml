@@ -22,8 +22,21 @@ jobs:
           port: 22
           script: |
             cd /var/www/erp
+
+            # 1. Serverdagi har qanday lokal o'zgarishlarni (settings.py yoki boshqa) majburlab o'chiramiz
+            git reset --hard HEAD
+
+            # 2. GitHub'dan eng toza va oxirgi kodni tortamiz (Endi konflikt bermaydi)
             git pull origin main
+
+            # 3. Virtual muhitni faollashtiramiz va kutubxonalarni yangilaymiz
             source venv/bin/activate
             pip install -r requirements.txt
+
+            # 4. Django komandalarini bajaramiz
             python manage.py migrate
+            python manage.py collectstatic --noinput
+
+            # 5. Gunicorn-ni qayta yuklaymiz 
+            # (Agarda tizimda xizmat nomi boshqacha bo'lsa, 'gunicorn' o'rniga o'shani yozing)
             sudo systemctl restart gunicorn
